@@ -3,6 +3,7 @@ package com.ecommerce.sbEcommerce.controller;
 import com.ecommerce.sbEcommerce.Repository.CartRepository;
 import com.ecommerce.sbEcommerce.model.Cart;
 import com.ecommerce.sbEcommerce.payload.CartDTO;
+import com.ecommerce.sbEcommerce.payload.CartItemDTO;
 import com.ecommerce.sbEcommerce.service.CartService;
 import com.ecommerce.sbEcommerce.utils.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -24,6 +26,12 @@ public class CartController {
 
     @Autowired
     private AuthUtil authUtil;
+
+    @PostMapping("/cart/create")
+    public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
     @PostMapping("/carts/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long productId,

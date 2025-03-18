@@ -34,7 +34,7 @@ import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     @Autowired
@@ -76,15 +76,20 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http.cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                               // .requestMatchers("/api/admin/**").permitAll()
-                              //  .requestMatchers("/api/public/**").permitAll()
+                                //.requestMatchers("/api/admin/**").permitAll()
+                                 .requestMatchers("/api/public/**").permitAll()
+                                .requestMatchers("api/order/users/**").permitAll()
+                                .requestMatchers("/api/cart/create").permitAll()
+                                .requestMatchers("api/order/stripe-client-secret").permitAll()
+                                .requestMatchers("api/addresses").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
